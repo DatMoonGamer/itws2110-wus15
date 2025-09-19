@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nick's Resume</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100%;
+      height: 100%;
+      padding: 2rem;
+    }
+
+    .n {
+      font-weight: bold;
+      font-size: 2.5rem;
+    }
+
+    .photo {
+      margin: 1rem;
+    }
+
+    h1 {
+      margin-top: 1.5rem;
+    }
+
+    section {
+      margin-top: 1rem;
+      margin-left: 1rem;
+    }
+
+    section .desc {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    section .dates {
+      font-size: 0.8rem;
+    }
+
+    section ul {
+      margin-top: 0.5rem;
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- hCard format allows me to make my contact info more accessible -->
+  <div class="vcard">
+    <div class="fn n">
+      <span class="given-name">Nicholas</span>
+      <span class="family-name">Ciuica</span>
+    </div>
+
+    <!-- I realized that I actually don't wanna put my personal info -->
+    <div><span class="tel"></span></div>
+    <div> Email: <a class="email" href="mailto:ciuicn@rpi.edu">ciuicn@rpi.edu</a></div>
+
+    <img class="photo" src="/pictures/people/nick.jpg" alt="" width="200">
+
+    <div class="adr">
+      Local Address:
+      <span class="street-address"> 1999 Burdett Ave</span>,
+      <span class="locality">Troy</span>,
+      <span class="region">NY</span>,
+      <span class="postal-code">12180</span>,
+      <span class="country-name">United States of America</span>
+    </div>
+  </div>
+
+  <!-- Rest of resume after basic hCard info begins here -->
+
+  <h1>Introduction</h1>
+
+  <section>
+    <h2>Summary</h2>
+    <p>
+      Dedicated and driven student pursuing a Bachelor’s Degree in Computer Science and Information Technology & Web Science. 
+      <br>Organized and creative thinker with a passion for analytical thinking and problem-solving. 
+      <br>Responsible team member experienced with collaborative and independent work.
+    </p>  
+  </section>
+
+  <h1>Education</h1>
+
+  <section>
+    <h2>Rensselaer Polytechnic Institute</h2>
+    <div class="desc">B.S. in Computer Scienc and Information Technology & Web Science</div>
+    <div class="dates">August 2024 - May 2028</div>
+    <ul>
+      <li>GPA 4.0</li>
+      <li>Rensselaer Medal Merit Scholarship</li>
+      <li>Dean’s Honor List</li>
+      <li>Archimedean Society Member</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Bishop Feehan High School</h2>
+    <div class="desc">High School Diploma</div>
+    <div class="dates">September 2020 - May 2024</div>
+    <ul>
+      <li>GPA 4.0</li>
+      <li>Salutatorian ‘24</li>
+      <li>Principal's Academic Scholarship</li>
+    </ul>
+  </section>
+
+  <h1>Experience</h1>
+
+  <section>
+    <h2>iD Tech Camps</h2>
+    <div class="desc">Instructor</div>
+    <div class="dates">May 2025 - August 2025</div>
+    <ul>
+      <li>Taught 10-12 yr. students how to make games in Roblox Studio.</li>
+      <li>Covered game dev. principles, Lua scripting, and monetization</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Skechers</h2>
+    <div class="desc">Sales Associate</div>
+    <div class="dates">June 2024 - August 2024</div>
+    <ul>
+      <li>Maintained store appeal, greeted customers, handled transactions.</li>
+      <li>Utilized foreign language skills to make customers feel welcomed.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>LiveNation</h2>
+    <div class="desc">Parking Attendant</div>
+    <div class="dates">May 2024 - July 2024</div>
+    <ul>
+      <li>Answered general questions, ensured smooth entry/exit of traffic.</li>
+      <li>Conducted patrols and reported suspicious activity.</li>
+    </ul>
+  </section>
+
+  <h1>Skills</h1>
+  
+  <section>
+    <h2>Experience in Technologies:</h2>
+    <ul>
+      <li>C, C++, Java, Python</li>
+      <li>HTML, CSS, JS</li>
+      <li>AJAX, PHP, SQL</li>
+      <li>Godot & GDScript</li>
+      <li>Unity & C#</li>
+      <li>Roblox Studio & Lua</li>
+      <li>R for data visualization</li>
+      <li>Microsoft and Google Workspaces</li>
+    </ul>
+  </section>
+
+</body>
+
+</html>
