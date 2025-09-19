@@ -49,3 +49,9 @@
  - I worked on the graphics (photo standardization, logo) and some CSS styling.
  - This assignment was a good warm-up to get back to frontend web development.
  - Working together in person allowed us to resolve issues and discuss ideas very quickly.
+
+- Jacob
+  - I reworked my resume to include all new information from last semester and partial information from this semester.
+  - Also applied various edits and improvements to the styling to improve the readability.
+  - For this first project/lab, seeing as there was no private information that we wanted to keep, we wanted this to be semi-temporarily publicly hosted. For this I knew cloudflare would allow us to tunnel our hosted website from a private webserver to a public domain. Knowing this we were able to set up a private server and host it on the subdomain: https://itws-project.w2sz.org
+  - Meeting on a semi regular basis definately helped us to make good progress on the lab.
