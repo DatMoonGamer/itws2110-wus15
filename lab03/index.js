@@ -26,7 +26,7 @@ const LON = 73.6789;
 // DONT LOOK AT THIS :D
 const API_KEY = "c24e364f8679bc72ef1e962dd5ece75d"; // Use a secure method for real applications!
 
-const API_URL = `https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}`;
+const API_URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}`;
 // NOTE: OpenWeatherMap now recommends the "One Call API 3.0" which is slightly different. 
 // I've kept the structure close to your example response.
 
@@ -40,20 +40,20 @@ async function fetchWeatherData() {
         const data = await response.json();
         
         // --- Current Weather Data ---
-        const current = data.current;
+        const main = data.main;
         document.getElementById('location-data').textContent = data.timezone; // Using timezone as a pseudo-location
-        document.getElementById('temp-data').textContent = `${kelvinToCelsius(current.temp)} °C`;
-        document.getElementById('feels-like-data').textContent = `${kelvinToCelsius(current.feels_like)} °C`;
-        document.getElementById('description-data').textContent = current.weather[0].description;
-        document.getElementById('humidity-data').textContent = `${current.humidity} %`;
-        document.getElementById('wind-speed-data').textContent = `${current.wind_speed} m/s`;
+        document.getElementById('temp-data').textContent = `${kelvinToCelsius(main.temp)} °C`;
+        document.getElementById('feels-like-data').textContent = `${kelvinToCelsius(main.feels_like)} °C`;
+        document.getElementById('description-data').textContent = main.weather[0].description;
+        document.getElementById('humidity-data').textContent = `${main.humidity} %`;
+        document.getElementById('wind-speed-data').textContent = `${main.wind_speed} m/s`;
         
         // Weather Icon
-        const iconCode = current.weather[0].icon;
+        const iconCode = main.weather[0].icon;
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
         const weatherIcon = document.getElementById('weather-icon');
         weatherIcon.src = iconUrl;
-        weatherIcon.alt = current.weather[0].description + " icon";
+        weatherIcon.alt = main.weather[0].description + " icon";
 
         // --- Daily Forecast Summary ---
         if (data.daily && data.daily.length > 0) {
@@ -89,7 +89,7 @@ async function fetchWeatherData() {
 
     } catch (error) {
         console.error("Error fetching or parsing weather data:", error);
-        document.getElementById('current-weather').innerHTML = '<p>Error loading weather data. Please try again later.</p>';
+        document.getElementById('main-weather').innerHTML = '<p>Error loading weather data. Please try again later.</p>';
     }
 }
 
