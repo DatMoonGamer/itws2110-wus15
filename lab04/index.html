@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITWS 2110 Lab 3: Modern API Integration</title>
-    <!-- Load Tailwind CSS via CDN for modern, responsive styling -->
+    <title>Pilot Flight Briefing System</title>
+    <!-- Load Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom Styles - Using Inter font as required */
+        /* Custom Styles for Cockpit Aesthetic */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0d1117; /* Dark background for a modern look */
+            /* Deep, professional cockpit blue/black */
+            background: #0D1626; 
         }
         
-        /* Ensure the main container takes up most of the viewport height */
         #app-container {
             min-height: 100vh;
         }
 
-        /* Loading Spinner Animation */
+        /* Loading Spinner Animation (Amber accent for instrument lighting) */
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #3b82f6;
+            border: 4px solid rgba(255, 255, 255, 0.1); 
+            border-top: 4px solid #fbbf24; /* Amber */
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -34,69 +34,103 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Custom styling for the METAR iframe container */
+        #metar-iframe-container {
+            /* Ensures the iframe is responsive and fits the card */
+            width: 100%;
+            height: 250px; /* Fixed height to prevent layout shift */
+            background-color: #1f2937; /* Dark gray fallback */
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #374151;
+        }
     </style>
 </head>
 <body class="text-white">
 
     <div id="app-container" class="p-6 flex flex-col items-center justify-center">
         
-        <!-- Header -->
-        <h1 class="text-4xl font-extrabold mb-4 text-center text-blue-400">
-            Weather & Creative Data App
-        </h1>
+        <!-- Header with Plane Image (SVG inline for self-contained file) -->
+        <div class="flex flex-col items-center mb-6">
+            <!-- A Simple, stylish SVG icon of a jet plane -->
+            <svg class="w-16 h-16 text-blue-400 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.84 9.17l-7.23-7.22a.5.5 0 00-.71 0L2.68 9.17a.5.5 0 00.35.85H5.5V17a1 1 0 001 1h10a1 1 0 001-1v-7h2.47a.5.5 0 00.34-.83zM12 17v-8m0 0l-3 4m3-4l3 4"/>
+                <path d="M12 18v2.5M9.5 20.5H14.5"/>
+            </svg>
+            <h1 class="text-4xl font-extrabold text-center text-amber-400">
+                <span class="text-blue-400">EFB</span> - Pilot Flight Briefing
+            </h1>
+        </div>
+        
         <p class="text-gray-400 mb-8 text-lg text-center max-w-xl">
-            ITWS 2110 Lab 3 Starter Template
+            Flight Conditions (WX), Official METAR, and Pilot's Briefing
         </p>
 
-        <!-- Main Content Area (Responsive Grid) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
+        <!-- Main Content Area (3 Panels in a 2x2 grid) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
 
-            <!-- 1. OpenWeatherMap Card (Required) -->
-            <div id="weather-card" class="bg-gray-800 p-6 rounded-2xl shadow-2xl transition duration-300 hover:shadow-blue-500/50">
-                <h2 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    Weather for <span id="weather-location" class="ml-1 text-blue-300">Troy, NY</span>
+            <!-- 1. OpenWeatherMap Card (Flight Conditions) -->
+            <div id="weather-card" class="bg-blue-900/40 p-6 rounded-xl shadow-xl transition duration-300 hover:shadow-amber-500/30 border border-blue-700/50 md:col-span-1">
+                <h2 class="text-2xl font-bold mb-4 border-b border-blue-700 pb-2 flex items-center text-blue-300">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="color:#fbbf24;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Flight Conditions (WX) for <span id="weather-location" class="ml-1 text-amber-400">Troy, US</span>
                 </h2>
                 <div id="weather-data-content" class="flex flex-col space-y-3">
                     <div class="spinner mx-auto" id="weather-spinner"></div>
-                    <p class="text-gray-400 text-center">Loading weather data...</p>
-                    
-                    <!-- Data will be injected here by JavaScript -->
-                    <!-- Example structure: -->
-                    <!-- 
-                    <p class="text-5xl font-light"><span id="temp">--</span>°C</p>
-                    <p class="text-xl font-medium" id="description">--</p>
-                    <p>Wind: <span id="wind-speed">--</span> m/s</p>
-                    <p>Humidity: <span id="humidity">--</span>%</p> 
-                    -->
+                    <p class="text-gray-400 text-center">Awaiting WX report...</p>
                 </div>
             </div>
 
-            <!-- 2. Second API Card (Your Choice - Suggestion: Random Fact/Quote/Activity) -->
-            <div id="second-api-card" class="bg-gray-800 p-6 rounded-2xl shadow-2xl transition duration-300 hover:shadow-green-500/50">
-                <h2 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M3.636 5.636l.707.707m-1.414 7l-.707.707m19.092 0l-.707.707M12 21h.01M7 9h10a1 1 0 011 1v5a1 1 0 01-1 1H7a1 1 0 01-1-1v-5a1 1 0 011-1zm0 0V8a1 1 0 011-1h1a1 1 0 011 1v1h-3z"></path></svg>
-                    Activity Suggestion (Bored API)
+            <!-- 2. Official METAR Widget (METAR-TAF.com Embed) -->
+            <div id="metar-card" class="bg-blue-900/40 p-6 rounded-xl shadow-xl transition duration-300 hover:shadow-amber-500/30 border border-blue-700/50 md:col-span-1">
+                <h2 class="text-2xl font-bold mb-4 border-b border-blue-700 pb-2 flex items-center text-blue-300">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="color:#fbbf24;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Official METAR for <span class="ml-1 text-amber-400">KALB</span>
                 </h2>
-                <div id="second-api-data-content" class="flex flex-col space-y-3">
-                    <div class="spinner mx-auto" id="second-api-spinner"></div>
-                    <p class="text-gray-400 text-center">Loading a fun activity idea...</p>
-                    <!-- Data will be injected here by JavaScript -->
+                <div id="metar-iframe-container">
+                    <!-- Embed METAR-TAF.com Iframe for KALB -->
+                    <iframe 
+                        src="https://metar-taf.com/embed/kalb" 
+                        title="METAR for KALB" 
+                        width="100%" 
+                        height="100%" 
+                        style="border: none; background-color: transparent;"
+                        loading="lazy">
+                    </iframe>
                 </div>
-                <button id="refresh-activity-btn" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
-                    Get New Idea
-                </button>
+                <p class="text-gray-500 text-xs mt-3">
+                    METAR data provided by metar-taf.com.
+                </p>
+            </div>
+            
+            <!-- 3. ZenQuotes Card (Pilot's Briefing) - Spans both columns on small screens, full width on medium screens -->
+            <div id="second-api-card" class="bg-blue-900/40 p-6 rounded-xl shadow-xl transition duration-300 hover:shadow-amber-500/30 border border-blue-700/50 md:col-span-2">
+                <h2 class="text-2xl font-bold mb-4 border-b border-blue-700 pb-2 flex items-center text-blue-300">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="color:#fbbf24;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10m-5 4h5M9 6v.586a2 2 0 01.586 1.414L7.414 10.414a2 2 0 00-.586 1.414V14a2 2 0 002 2h6a2 2 0 002-2v-2.172a2 2 0 00-.586-1.414L14.586 7.586A2 2 0 0115 6.586V6"></path></svg>
+                    Pilot's Briefing (ZenQuotes)
+                </h2>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div id="second-api-data-content" class="flex-grow w-full md:w-auto">
+                        <div class="spinner mx-auto"></div>
+                        <p class="text-gray-400 text-center mt-2">Loading inspiration...</p>
+                    </div>
+                    <!-- Refresh Button (Amber/Blue color scheme) -->
+                    <button id="refresh-quote-btn" class="shrink-0 w-full md:w-auto bg-amber-600 hover:bg-amber-700 text-gray-900 font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50">
+                        New Briefing
+                    </button>
+                </div>
             </div>
         </div>
         
-        <!-- Geolocation Button (Bonus 5 points) -->
-        <button id="geolocation-btn" class="mt-8 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 shadow-xl hover:shadow-purple-500/50 text-lg focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-75">
+        <!-- Geolocation Button (Indigo/Blue color scheme) -->
+        <button id="geolocation-btn" class="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 shadow-xl hover:shadow-indigo-400/50 text-lg focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-75">
             <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.727A8 8 0 016.343 5.273L4.363 7.253a1 1 0 00-.07 1.414l.707.707A1 1 0 005.657 9.879l1.414-1.414M16.95 14.243l-1.414 1.414a1 1 0 00-.707.07l-1.414.707M12 12V3a1 1 0 00-2 0v9a1 1 0 002 0zM7 16a5 5 0 1110 0 5 5 0 01-10 0z"></path></svg>
-            Use My Current Location (Bonus Feature)
+            Set Current Position (WX Update Only)
         </button>
 
-        <!-- Message Box for Errors/Geolocation Info -->
-        <div id="message-box" class="mt-4 p-3 max-w-lg w-full text-center text-sm rounded-lg bg-yellow-900/50 text-yellow-300 border border-yellow-800 hidden">
+        <!-- Message Box -->
+        <div id="message-box" class="mt-4 p-3 max-w-lg w-full text-center text-sm rounded-lg bg-blue-800 text-sky-300 border border-sky-600 hidden">
             <!-- Messages will appear here -->
         </div>
 
@@ -106,183 +140,178 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- CONSTANTS AND CONFIGURATION ---
-            // 1. You MUST replace this with your actual OpenWeatherMap API Key
             const OPEN_WEATHER_API_KEY = "c24e364f8679bc72ef1e962dd5ece75d"; 
             const OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
             
-            // Default location for the assignment requirement
-            const DEFAULT_CITY = "Troy, NY"; 
+            // CORS Proxy Base URL - REQUIRED for OpenWeatherMap and ZenQuotes
+            const CORS_PROXY_BASE = "https://corsproxy.io/?";
+
+            // SECOND API: ZenQuotes API
+            const ZENQUOTES_API_URL = `${CORS_PROXY_BASE}https://zenquotes.io/api/random`; 
+            
+            // Default location for the assignment
+            const DEFAULT_CITY = "Troy, US"; 
 
             // DOM Elements
             const weatherContent = document.getElementById('weather-data-content');
             const secondApiContent = document.getElementById('second-api-data-content');
             const weatherLocationSpan = document.getElementById('weather-location');
             const geolocationBtn = document.getElementById('geolocation-btn');
-            const refreshActivityBtn = document.getElementById('refresh-activity-btn');
+            const refreshQuoteBtn = document.getElementById('refresh-quote-btn'); 
             const messageBox = document.getElementById('message-box');
             
             // --- UTILITY FUNCTIONS ---
             
-            /**
-             * Shows a message to the user in the dedicated message box.
-             * @param {string} text - The message to display.
-             * @param {string} type - 'success', 'error', or 'info'.
-             */
             function showMessage(text, type = 'info') {
                 messageBox.textContent = text;
                 messageBox.className = 'mt-4 p-3 max-w-lg w-full text-center text-sm rounded-lg';
                 messageBox.classList.remove('hidden');
 
                 if (type === 'error') {
-                    messageBox.classList.add('bg-red-900/50', 'text-red-300', 'border', 'border-red-800');
+                    messageBox.classList.add('bg-red-900/50', 'text-amber-400', 'border', 'border-red-800');
                 } else if (type === 'success') {
-                    messageBox.classList.add('bg-green-900/50', 'text-green-300', 'border', 'border-green-800');
+                    messageBox.classList.add('bg-blue-900', 'text-blue-300', 'border', 'border-blue-600');
                 } else { // info/default
-                    messageBox.classList.add('bg-yellow-900/50', 'text-yellow-300', 'border', 'border-yellow-800');
+                    messageBox.classList.add('bg-blue-800', 'text-sky-300', 'border', 'border-sky-600');
                 }
-                setTimeout(() => messageBox.classList.add('hidden'), 5000); // Hide after 5s
+                setTimeout(() => messageBox.classList.add('hidden'), 5000);
             }
 
-            /**
-             * Converts temperature from Kelvin to Celsius.
-             * @param {number} k - Temperature in Kelvin.
-             * @returns {string} Temperature in Celsius, rounded.
-             */
             function kelvinToCelsius(k) {
                 return (k - 273.15).toFixed(1);
             }
 
-            // --- WEATHER API LOGIC ---
+            // --- WX API LOGIC ---
 
-            /**
-             * Fetches weather data for a given city or coordinates.
-             * @param {object} params - Query parameters for the API (e.g., {q: 'Troy, NY'} or {lat: 42.728, lon: -73.692}).
-             */
             async function fetchWeatherData(params) {
-                if (OPEN_WEATHER_API_KEY === "YOUR_OPENWEATHERMAP_API_KEY") {
-                    showMessage("ERROR: Please set your OpenWeatherMap API Key in the JavaScript code.", 'error');
-                    return;
-                }
-
-                const urlParams = new URLSearchParams({
-                    appid: OPEN_WEATHER_API_KEY,
+                const originalUrlParams = new URLSearchParams({
+                    appid: OPEN_WEATHER_API_KEY, 
                     ...params
                 });
-                
-                const url = `${OPEN_WEATHER_BASE_URL}?${urlParams.toString()}`;
+                const originalUrl = `${OPEN_WEATHER_BASE_URL}?${originalUrlParams.toString()}`;
+                const proxiedUrl = `${CORS_PROXY_BASE}${originalUrl}`;
 
-                // Show loading spinner
-                weatherContent.innerHTML = '<div class="spinner mx-auto"></div><p class="text-gray-400 text-center mt-2">Fetching weather...</p>';
+                weatherContent.innerHTML = '<div class="spinner mx-auto"></div><p class="text-gray-400 text-center mt-2">Awaiting WX report...</p>';
 
                 try {
-                    const response = await fetch(url);
+                    const response = await fetch(proxiedUrl);
                     
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(`API returned status ${response.status}: ${errorData.message}`);
+                        const errorData = await response.json().catch(() => ({ message: 'Unknown API error' }));
+                        let errorMessage = errorData.message || 'Server did not return weather data.';
+                        if (response.status === 401 && OPEN_WEATHER_API_KEY === "YOUR_OPENWEATHERMAP_API_KEY") {
+                            errorMessage = "API Key Missing! Please replace 'YOUR_OPENWEATHERMAP_API_KEY' with your actual key.";
+                        }
+                        throw new Error(`Status ${response.status}: ${errorMessage}`);
                     }
                     
                     const data = await response.json();
                     updateWeatherUI(data);
 
                 } catch (error) {
-                    console.error("Error fetching weather data:", error);
-                    weatherContent.innerHTML = `<p class="text-red-500 text-center">Failed to load weather: ${error.message}</p>`;
+                    console.error("Error fetching WX data:", error);
+                    weatherContent.innerHTML = `<p class="text-red-400 text-center">WX Failed: ${error.message}</p>`;
                 }
             }
 
-            /**
-             * Updates the Weather UI card with data from the API.
-             * @param {object} data - The parsed JSON response from OpenWeatherMap.
-             */
             function updateWeatherUI(data) {
                 const tempC = kelvinToCelsius(data.main.temp);
                 const description = data.weather[0].description;
                 const windSpeed = data.wind.speed.toFixed(1);
                 const humidity = data.main.humidity;
+                const clouds = data.clouds.all;
                 const location = `${data.name}, ${data.sys.country}`;
                 const iconCode = data.weather[0].icon;
-                const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`; // Icon URL
+                const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
                 weatherLocationSpan.textContent = location;
 
-                // Create the new content HTML
+                // Pilot terminology and high-contrast styling
                 weatherContent.innerHTML = `
                     <div class="flex items-center justify-between">
                         <!-- Temperature and Icon -->
                         <div class="flex items-center">
-                            <img src="${iconUrl}" alt="${description}" class="w-20 h-20">
-                            <p class="text-6xl font-light ml-2">${tempC}<span class="text-3xl align-top">°C</span></p>
+                            <img src="${iconUrl}" onerror="this.onerror=null; this.src='https://placehold.co/80x80/1e3a8a/e0f2f1?text=WX+ICON'" alt="${description}" class="w-20 h-20 filter drop-shadow-lg">
+                            <p class="text-6xl font-light ml-2 text-white">${tempC}<span class="text-3xl align-top text-blue-300">°C</span></p>
                         </div>
                         <!-- Details -->
-                        <div class="text-right space-y-1">
-                            <p class="text-xl font-medium capitalize text-blue-300">${description}</p>
-                            <p class="text-lg">Feels Like: ${kelvinToCelsius(data.main.feels_like)}°C</p>
-                            <p>Wind: <span class="font-semibold">${windSpeed}</span> m/s</p>
-                            <p>Humidity: <span class="font-semibold">${humidity}</span>%</p>
+                        <div class="text-right space-y-2 text-gray-300">
+                            <p class="text-xl font-medium capitalize text-blue-400">${description}</p>
+                            <div class="flex justify-end items-center text-sm">
+                                <span class="mr-2 text-amber-300">Surface Wind:</span>
+                                <span class="font-semibold">${windSpeed}</span> m/s
+                            </div>
+                            <div class="flex justify-end items-center text-sm">
+                                <span class="mr-2 text-amber-300">Humidity:</span>
+                                <span class="font-semibold">${humidity}</span>%
+                            </div>
+                            <div class="flex justify-end items-center text-sm">
+                                <span class="mr-2 text-amber-300">Cloud Cover:</span>
+                                <span class="font-semibold">${clouds}</span>%
+                            </div>
                         </div>
                     </div>
                 `;
             }
 
-            // --- SECOND API LOGIC (Example: Bored API for activities) ---
+            // --- METAR LOGIC (Removed old fetch logic, relying on Iframe now) ---
             
-            /**
-             * Fetches data from the second, creative API.
-             * Using the Bored API as a simple, free example: https://www.boredapi.com/
-             */
+            // --- SECOND API LOGIC (Pilot's Briefing) ---
+            
             async function fetchSecondAPIData() {
-                const SECOND_API_URL = "https://www.boredapi.com/api/activity";
-
-                // Show loading spinner
-                secondApiContent.innerHTML = '<div class="spinner mx-auto"></div><p class="text-gray-400 text-center mt-2">Finding activity...</p>';
+                refreshQuoteBtn.disabled = true;
+                secondApiContent.innerHTML = '<div class="spinner mx-auto"></div><p class="text-gray-400 text-center mt-2">Loading inspiration...</p>';
                 
                 try {
-                    const response = await fetch(SECOND_API_URL);
-
+                    const response = await fetch(ZENQUOTES_API_URL);
                     if (!response.ok) {
-                         throw new Error(`Second API returned status ${response.status}`);
+                         throw new Error(`ZenQuotes API (via proxy) returned status ${response.status}.`);
                     }
                     
-                    const data = await response.json();
-                    updateSecondAPIUI(data);
+                    const data = await response.json(); 
+                    if (!Array.isArray(data) || data.length === 0) {
+                        throw new Error("API returned an empty or unexpected response.");
+                    }
+                    
+                    updateSecondAPIUI(data[0]);
+
+                    refreshQuoteBtn.classList.remove('bg-amber-600');
+                    refreshQuoteBtn.classList.add('bg-blue-600', 'ring-4', 'ring-blue-500');
+                    setTimeout(() => {
+                        refreshQuoteBtn.classList.remove('bg-blue-600', 'ring-4', 'ring-blue-500');
+                        refreshQuoteBtn.classList.add('bg-amber-600');
+                        refreshQuoteBtn.disabled = false;
+                    }, 500);
 
                 } catch (error) {
-                    console.error("Error fetching second API data:", error);
-                    secondApiContent.innerHTML = `<p class="text-red-500 text-center">Failed to load activity: ${error.message}</p>`;
+                    console.error("Error fetching ZenQuotes API data:", error);
+                    secondApiContent.innerHTML = `<p class="text-red-400 text-center">Briefing Failed: ${error.message}.</p>`;
+                    refreshQuoteBtn.disabled = false;
                 }
             }
 
-            /**
-             * Updates the Second API UI card with data.
-             * @param {object} data - The parsed JSON response from the Bored API.
-             */
             function updateSecondAPIUI(data) {
-                if (data.activity) {
-                    secondApiContent.innerHTML = `
-                        <div class="text-center p-4 bg-gray-700 rounded-lg">
-                            <p class="text-3xl font-extrabold text-green-300 mb-2">Activity:</p>
-                            <p class="text-xl font-medium">${data.activity}</p>
-                            <div class="mt-3 flex justify-between text-sm text-gray-400">
-                                <span>Type: <span class="capitalize font-semibold">${data.type}</span></span>
-                                <span>Participants: <span class="font-semibold">${data.participants}</span></span>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                     secondApiContent.innerHTML = `<p class="text-gray-400 text-center">No activity found. Try again!</p>`;
-                }
+                const quoteContent = data.q || "Success is not final, failure is not fatal: it is the courage to continue that counts.";
+                const quoteAuthor = data.a || "Winston Churchill";
+                
+                secondApiContent.innerHTML = `
+                    <div class="text-left p-4 bg-blue-800 rounded-lg border-l-4 border-amber-400">
+                        <blockquote class="text-xl italic mb-3 text-white">
+                            "${quoteContent}"
+                        </blockquote>
+                        <p class="text-right font-semibold text-amber-400">
+                            — ${quoteAuthor}
+                        </p>
+                    </div>
+                `;
             }
 
 
             // --- GEOLOCATION BONUS LOGIC ---
 
-            /**
-             * Attempts to get the user's current position and fetch weather for it.
-             */
             function handleGeolocation() {
                 geolocationBtn.disabled = true;
-                geolocationBtn.textContent = 'Locating...';
+                geolocationBtn.textContent = 'Acquiring Position...';
                 
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
@@ -290,49 +319,48 @@
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
                             
-                            showMessage(`Location found! Lat: ${lat.toFixed(3)}, Lon: ${lon.toFixed(3)}. Fetching weather...`, 'success');
+                            showMessage(`Position Acquired! Lat: ${lat.toFixed(3)}, Lon: ${lon.toFixed(3)}. Fetching local WX...`, 'success');
                             
                             // Call weather API using coordinates
                             fetchWeatherData({ lat: lat, lon: lon });
 
-                            geolocationBtn.textContent = 'Successfully Used Location';
-                            // Note: We don't re-enable the button as we consider the action complete.
+                            geolocationBtn.textContent = 'Position Set (WX Updated)';
                         },
                         (error) => {
-                            let msg = "Geolocation failed. Defaulting to Troy, NY.";
+                            let msg = "Position acquisition failed. Reverting to Troy WX.";
                             if (error.code === error.PERMISSION_DENIED) {
-                                msg = "Permission denied to access location. Please enable location services in your browser.";
+                                msg = "Permission denied for location access. Please enable GPS in your browser.";
                             }
-                            showMessage(`ERROR: ${msg}`, 'error');
+                            showMessage(`WARNING: ${msg}`, 'error');
                             console.error("Geolocation Error:", error.message);
                             
-                            // Revert to default
                             fetchWeatherData({ q: DEFAULT_CITY });
                             
                             geolocationBtn.disabled = false;
-                            geolocationBtn.textContent = 'Use My Current Location (Bonus Feature)';
+                            geolocationBtn.textContent = 'Set Current Position (WX Update Only)';
                         }
                     );
                 } else {
-                    showMessage("Geolocation is not supported by this browser. Defaulting to Troy, NY.", 'error');
+                    showMessage("Geolocation not available in this EFB. Defaulting to Troy WX.", 'error');
                     fetchWeatherData({ q: DEFAULT_CITY });
                     geolocationBtn.disabled = true;
-                    geolocationBtn.textContent = 'Geolocation Not Supported';
+                    geolocationBtn.textContent = 'Position Feature Unavailable';
                 }
             }
 
 
             // --- INITIALIZATION & EVENT LISTENERS ---
 
-            // Initial data fetch (Troy, NY requirement)
+            // Initial data fetch (Troy, US requirement)
             fetchWeatherData({ q: DEFAULT_CITY });
-            fetchSecondAPIData(); // Initial fetch for the creative data
+            // METAR fetch is no longer needed as we use the iframe embed.
+            fetchSecondAPIData(); 
 
             // Event Listener for Geolocation Button (Bonus)
             geolocationBtn.addEventListener('click', handleGeolocation);
 
             // Event Listener for Second API Refresh Button
-            refreshActivityBtn.addEventListener('click', fetchSecondAPIData);
+            refreshQuoteBtn.addEventListener('click', fetchSecondAPIData);
 
         });
     </script>

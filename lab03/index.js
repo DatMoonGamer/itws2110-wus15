@@ -94,3 +94,42 @@ async function fetchWeatherData() {
 }
 
 fetchWeatherData();
+
+// insert inspirational quote api
+async function fetchInspirationalQuote() {
+    const quoteContainer = document.getElementById('inspirational-quote-container');
+    const QUOTE_API_URL = "https://zenquotes.io/api/random";
+    
+    try {
+        const response = await fetch(QUOTE_API_URL);
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            const quoteData = data[0];
+            const quoteText = quoteData.q;
+            const author = quoteData.a;
+
+            quoteContainer.innerHTML = ''; // Clear 'Loading quote...'
+
+            const quoteElement = document.createElement('p');
+            // This structure makes the text easily selectable/copypastable
+            quoteElement.innerHTML = `&ldquo;${quoteText}&rdquo;`; 
+            quoteElement.style.fontStyle = 'italic';
+
+            const authorElement = document.createElement('p');
+            authorElement.textContent = `— ${author}`;
+            authorElement.style.textAlign = 'right';
+
+            quoteContainer.appendChild(quoteElement);
+            quoteContainer.appendChild(authorElement);
+        } else {
+            quoteContainer.textContent = "Could not load inspirational quote.";
+        }
+
+    } catch (error) {
+        console.error("Error fetching inspirational quote:", error);
+        quoteContainer.textContent = "Error loading inspirational quote.";
+    }
+}
+
+fetchInspirationalQuote();
