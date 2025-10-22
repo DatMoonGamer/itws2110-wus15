@@ -20,116 +20,158 @@ window.onload = function() {
 
 // ==========================================================
 
-// NOTE: Replace these with your actual latitude, longitude, and API Key!
-const LAT = 42.7298;
-const LON = 73.6789;
-// DONT LOOK AT THIS :D
-const API_KEY = "c24e364f8679bc72ef1e962dd5ece75d"; // Use a secure method for real applications!
+document.addEventListener('DOMContentLoaded', () => {
+    // --- CONSTANTS AND CONFIGURATION ---
+    const OPEN_WEATHER_API_KEY = "c24e364f8679bc72ef1e962dd5ece75d"; 
+    const OPEN_WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
-const API_URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}`;
-// NOTE: OpenWeatherMap now recommends the "One Call API 3.0" which is slightly different. 
-// I've kept the structure close to your example response.
+    // CORS Proxy Base URL
+    const CORS_PROXY_BASE = "https://corsproxy.io/?url=";
 
-function kelvinToCelsius(K) {
-    return (K - 273.15).toFixed(1); // One decimal place
-}
+    // SECOND API: ZenQuotes API
+    const ZENQUOTES_API_URL = `${CORS_PROXY_BASE}https://zenquotes.io/api/random`; 
 
-async function fetchWeatherData() {
-    try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        
-        // --- Current Weather Data ---
-        const main = data.main;
-        document.getElementById('location-data').textContent = data.timezone; // Using timezone as a pseudo-location
-        document.getElementById('temp-data').textContent = `${kelvinToCelsius(main.temp)} °C`;
-        document.getElementById('feels-like-data').textContent = `${kelvinToCelsius(main.feels_like)} °C`;
-        document.getElementById('description-data').textContent = main.weather[0].description;
-        document.getElementById('humidity-data').textContent = `${main.humidity} %`;
-        document.getElementById('wind-speed-data').textContent = `${main.wind_speed} m/s`;
-        
-        // Weather Icon
-        const iconCode = main.weather[0].icon;
+    // Default location for the assignment
+    const DEFAULT_CITY = "Troy, US"; 
+
+    // DOM Elements
+    const weatherContent = document.getElementById('weather-data-content');
+    const secondApiContent = document.getElementById('second-api-data-content');
+    const weatherLocationSpan = document.getElementById('weather-location');
+    const refreshQuoteBtn = document.getElementById('refresh-quote-btn'); 
+    const messageBox = document.getElementById('message-box');
+
+    // --- UTILITY FUNCTIONS ---
+
+    function showMessage(text, type = 'info') {
+        messageBox.textContent = text;
+        messageBox.className = 'mt-4 p-3 max-w-lg w-full text-center text-sm rounded-lg';
+        messageBox.classList.remove('hidden');
+
+        if (type === 'error') {
+            messageBox.classList.add('bg-red-900/50', 'text-amber-400', 'border', 'border-red-800');
+        } else if (type === 'success') {
+            messageBox.classList.add('bg-blue-900', 'text-blue-300', 'border', 'border-blue-600');
+        } else { // info/default
+            messageBox.classList.add('bg-blue-800', 'text-sky-300', 'border', 'border-sky-600');
+        }
+        setTimeout(() => messageBox.classList.add('hidden'), 5000);
+    }
+
+    function kelvinToCelsius(k) {
+        return (k - 273.15).toFixed(1);
+    }
+
+    // --- WX API LOGIC ---
+
+    async function fetchWeatherData(params) {
+        const originalUrlParams = new URLSearchParams({
+            appid: OPEN_WEATHER_API_KEY, 
+            ...params
+        });
+        const originalUrl = `${OPEN_WEATHER_BASE_URL}?${originalUrlParams.toString()}`;
+        const proxiedUrl = `${CORS_PROXY_BASE}${originalUrl}`;
+
+        weatherContent.innerHTML = '<div class="spinner mx-auto"></div><p class="text-gray-400 text-center mt-2">Awaiting WX report...</p>';
+
+        try {
+            const response = await fetch(proxiedUrl);
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Unknown API error' }));
+                let errorMessage = errorData.message || 'Server did not return weather data.';
+                if (response.status === 401 && OPEN_WEATHER_API_KEY === "YOUR_OPENWEATHERMAP_API_KEY") {
+                    errorMessage = "API Key Missing! Please replace 'YOUR_OPENWEATHERMAP_API_KEY' with your actual key.";
+                }
+                throw new Error(`Status ${response.status}: ${errorMessage}`);
+            }
+            
+            const data = await response.json();
+            updateWeatherUI(data);
+
+        } catch (error) {
+            console.error("Error fetching WX data:", error);
+            weatherContent.innerHTML = `<p class="text-red-400 text-center">WX Failed: ${error.message}</p>`;
+        }
+    }
+
+    function updateWeatherUI(data) {
+        const tempC = kelvinToCelsius(data.main.temp);
+        const description = data.weather[0].description;
+        const windSpeed = data.wind.speed.toFixed(1);
+        const humidity = data.main.humidity;
+        const clouds = data.clouds.all;
+        const location = `${data.name}, ${data.sys.country}`;
+        const iconCode = data.weather[0].icon;
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-        const weatherIcon = document.getElementById('weather-icon');
-        weatherIcon.src = iconUrl;
-        weatherIcon.alt = main.weather[0].description + " icon";
 
-        // --- Daily Forecast Summary ---
-        if (data.daily && data.daily.length > 0) {
-            document.getElementById('daily-summary').textContent = data.daily[0].summary;
-        }
+        weatherLocationSpan.textContent = location;
 
-        // --- Weather Alerts ---
-        const alertsContainer = document.getElementById('weather-alerts');
-        alertsContainer.innerHTML = ''; // Clear the initial 'No active alerts' message
-
-        if (data.alerts && data.alerts.length > 0) {
-            data.alerts.forEach(alert => {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert-item';
-                
-                const event = document.createElement('h4');
-                event.textContent = alert.event;
-                
-                const sender = document.createElement('p');
-                sender.textContent = `Source: ${alert.sender_name}`;
-                
-                const description = document.createElement('p');
-                description.textContent = alert.description.substring(0, 150) + '...'; // Truncate description
-                
-                alertDiv.appendChild(event);
-                alertDiv.appendChild(sender);
-                alertDiv.appendChild(description);
-                alertsContainer.appendChild(alertDiv);
-            });
-        } else {
-            document.getElementById('no-alerts-message').style.display = 'block'; // Show the default message
-        }
-
-    } catch (error) {
-        console.error("Error fetching or parsing weather data:", error);
-        document.getElementById('main-weather').innerHTML = '<p>Error loading weather data. Please try again later.</p>';
+        // Pilot terminology and high-contrast styling
+        weatherContent.innerHTML = `
+            <div class="flex items-center justify-between">
+                <!-- Temperature and Icon -->
+                <div class="flex items-center">
+                    <img src="${iconUrl}" onerror="this.onerror=null; this.src='https://placehold.co/80x80/1e3a8a/e0f2f1?text=WX+ICON'" alt="${description}" class="w-20 h-20 filter drop-shadow-lg">
+                    <p class="text-6xl font-light ml-2 text-white">${tempC}<span class="text-3xl align-top text-blue-300">°C</span></p>
+                </div>
+                <!-- Details -->
+                <div class="text-right space-y-2 text-gray-300">
+                    <p class="text-xl font-medium capitalize text-blue-400">${description}</p>
+                    <div class="flex justify-end items-center text-sm">
+                        <span class="mr-2 text-amber-300">Surface Wind:</span>
+                        <span class="font-semibold">${windSpeed}</span> m/s
+                    </div>
+                    <div class="flex justify-end items-center text-sm">
+                        <span class="mr-2 text-amber-300">Humidity:</span>
+                        <span class="font-semibold">${humidity}</span>%
+                    </div>
+                    <div class="flex justify-end items-center text-sm">
+                        <span class="mr-2 text-amber-300">Cloud Cover:</span>
+                        <span class="font-semibold">${clouds}</span>%
+                    </div>
+                </div>
+            </div>
+        `;
     }
-}
 
-fetchWeatherData();
-
-// insert inspirational quote api
-async function fetchInspirationalQuote() {
-    const quoteContainer = document.getElementById('inspirational-quote-container');
-    const QUOTE_API_URL = "https://zenquotes.io/api/random";
-    
-    try {
-        const response = await fetch(QUOTE_API_URL);
-        const data = await response.json();
+    async function fetchSecondAPIData() {
+        secondApiContent.innerHTML = '<div class="spinner mx-auto"></div><p class="text-gray-400 text-center mt-2">Loading inspiration...</p>';
         
-        if (data && data.length > 0) {
-            const quoteData = data[0];
-            const quoteText = quoteData.q;
-            const author = quoteData.a;
-
-            quoteContainer.innerHTML = ''; // Clear 'Loading quote...'
-
-            const quoteElement = document.createElement('p');
-            // This structure makes the text easily selectable/copypastable
-            quoteElement.innerHTML = `&ldquo;${quoteText}&rdquo;`; 
-            quoteElement.style.fontStyle = 'italic';
-
-            const authorElement = document.createElement('p');
-            authorElement.textContent = `— ${author}`;
-            authorElement.style.textAlign = 'right';
-
-            quoteContainer.appendChild(quoteElement);
-            quoteContainer.appendChild(authorElement);
-        } else {
-            quoteContainer.textContent = "Could not load inspirational quote.";
+        try {
+            const response = await fetch(ZENQUOTES_API_URL);
+            if (!response.ok) {
+                    throw new Error(`ZenQuotes API (via proxy) returned status ${response.status}.`);
+            }
+            
+            const data = await response.json(); 
+            if (!Array.isArray(data) || data.length === 0) {
+                throw new Error("API returned an empty or unexpected response.");
+            }
+            
+            updateSecondAPIUI(data[0]);
+        } catch (error) {
+            console.error("Error fetching ZenQuotes API data:", error);
+            secondApiContent.innerHTML = `<p class="text-red-400 text-center">Failed to fetch quote: ${error.message}.</p>`;
         }
-
-    } catch (error) {
-        console.error("Error fetching inspirational quote:", error);
-        quoteContainer.textContent = "Error loading inspirational quote.";
     }
-}
 
-fetchInspirationalQuote();
+    function updateSecondAPIUI(data) {
+        const quoteContent = data.q || "Despite everything, it's still you.";
+        const quoteAuthor = data.a || "Toby Fox";
+        
+        secondApiContent.innerHTML = `
+            <div class="text-left p-4 bg-blue-800 rounded-lg border-l-4 border-amber-400">
+                <blockquote class="text-xl italic mb-3 text-white">
+                    "${quoteContent}"
+                </blockquote>
+                <p class="text-right font-semibold text-amber-400">
+                    — ${quoteAuthor}
+                </p>
+            </div>
+        `;
+    }
+
+    fetchWeatherData({ q: DEFAULT_CITY });
+    fetchSecondAPIData(); 
+});

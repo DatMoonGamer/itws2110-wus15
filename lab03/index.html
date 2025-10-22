@@ -22,49 +22,36 @@
     </div>
 
     <div class="main_content">
-<div class="container">
-  <div class="row">
-    <div class="col-12 col-lg-6 mb-5">
-      <div class="metars content_box">
-      <a href="https://metar-taf.com/metar/KALB" id="metartaf-MNU2DdIn" style="font-size:18px; font-weight:500; width:300px; display:block">METAR Albany International Airport</a>
-        <script async defer crossorigin="anonymous" src="https://metar-taf.com/embed-js/KALB?visibility=mi&qnh=inHg&rh=rh&target=MNU2DdIn"></script>
-      </div>
-</div>
-    <div class="col-12 col-lg-6 mb-5">
-      <div class="content_box">
-        <div class="weather-container">
-            <h1>Current Weather</h1>
-            
-            <div id="main-weather" class="weather-card">
-                <p><strong>Location:</strong> <span id="location-data">Loading...</span></p>
-                <p><strong>Temperature:</strong> <span id="temp-data"></span></p>
-                <p><strong>Feels Like:</strong> <span id="feels-like-data"></span></p>
-                <p><strong>Conditions:</strong> <span id="description-data"></span> <img id="weather-icon" src="" alt="Weather Icon"></p>
-                <p><strong>Humidity:</strong> <span id="humidity-data"></span></p>
-                <p><strong>Wind Speed:</strong> <span id="wind-speed-data"></span></p>
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-lg-6 mb-5">
+            <div class="metars content_box">
+            <a href="https://metar-taf.com/metar/KALB" id="metartaf-MNU2DdIn" style="font-size:18px; font-weight:500; width:300px; display:block">METAR Albany International Airport</a>
+              <script async defer crossorigin="anonymous" src="https://metar-taf.com/embed-js/KALB?visibility=mi&qnh=inHg&rh=rh&target=MNU2DdIn"></script>
             </div>
-            
-            <hr>
-
-            <h2>Daily Forecast Summary</h2>
-            <div id="daily-summary" class="summary-card">
+      </div>
+      <div class="col-12 col-lg-6 mb-5">
+          <div class="content_box">
+            <div class="weather-container">
+                <h1>Current Weather</h1>
+                
+                <div id="main-weather" class="weather-card">
+                    <p><strong>Location:</strong> <span id="weather-location">Loading...</span></p>
+                    <div id="weather-data-content">
+                    <p>Awaiting WX report...</p>
                 </div>
-
-            <hr>
-
-            <h2>Weather Alerts</h2>
-            <div id="weather-alerts" class="alerts-container">
-                <p id="no-alerts-message">No active alerts.</p>
+                </div>
+                
+                <div id="message-box" class="hidden"></div>
+                
             </div>
+          </div>
         </div>
-      </div>
-    </div>
     <div class="col-12 col-lg-6 mb-5 content_box">
-      <h1>About this tool</h1>
+      <h1>inspirational quote of the day for aspirational pylots</h1>
       <p>make sure weather is good for flying playne :)</p>
       <p>good pylots check weather :)))</p>
-      <h2>inspirational quote btw</h2>
-      <div id="inspirational-quote-container">Loading quote...</div>
+      <div id="second-api-data-content">Loading quote...</div>
     </div>
     <div class="col-12 col-lg-6 mb-5">
         <div class="slideshow">
