@@ -1,74 +1,86 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Lab 03</title>
     <link rel="icon" type="image/x-icon" href="resources/img/websys_quiz01.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-   <link rel="stylesheet" href="resources/style.css">
-    <script type="text/javascript" src="index.js"></script>
-  </head>
+    <link rel="stylesheet" href="resources/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="resources/index.js"></script>
+</head>
+
 <body>
-       <!-- header -->
+    <!-- header -->
     <div id="header" class="fixed-top">
-      <div class="header_container">
-        <div id="header_left">
-          <img src="resources/img/websys_quiz01.png" alt="cynosure" class="logo-img"/>
-          <a href="index.html" class="brand-link">Henbang Dining 很棒餐厅</a>
+        <div class="header_container">
+            <div id="header_left">
+                <img src="resources/img/websys_quiz01.png" alt="cynosure" class="logo-img" />
+                <a href="index.html" class="brand-link">Henbang Dining 很棒餐厅</a>
+            </div>
+            <ul class="nav-list">
+                <li><a href="README.md" target="_blank" class="nav-link">README.md</a></li>
+            </ul>
         </div>
-        <ul class="nav-list">
-          <li><a href="README.md" target="_blank" class="nav-link">Sources</a></li>
-        </ul>
-      </div>
     </div>
 
     <!-- main content -->
-<div class="main_content">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-lg-6 mb-5">
-            <div class="content_box">
-              <h1>hi</h1>
-            </div>
-      </div>
-      <div class="col-12 col-lg-6 mb-5">
-          <div class="content_box">
-            <div class="weather-container">
-                <h1>Current Weather</h1>
-                
-                <div id="main-weather" class="weather-card">
-                    <p><strong>Location:</strong> <span id="weather-location">Loading...</span></p>
-                    <div id="weather-data-content">
-                    <p>Awaiting WX report...</p>
+    <div class="main_content">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-6 mb-5 mx-auto">
+                    <div class="content_box">
+                        <h1>Menu</h1>
+                        <div class="slideshow">
+                            <img class="slide" src="resources/img/ramen.jpeg">
+                            <img class="slide" src="resources/img/hongshaoniuroumian.jpg">
+                            <img class="slide" src="resources/img/steak.jpg">
+                            <img class="slide" src="resources/img/lambchops.jpg">
+                        </div>
+                    </div>
                 </div>
-                </div>
-                
-                <div id="message-box" class="hidden"></div>
-                
             </div>
-          </div>
+            <div class="row">
+                <div class="col-12 col-lg-6 mb-5">
+                    <div class="content_box">
+                        <div id="projectMenuOutput"></div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 mb-5">
+                    <div class="content_box">
+                        <div class="weather-container">
+                            <h1>Current Weather</h1>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6 mb-5 content_box">
+                    <h1>inspirational quote of the day for aspirational pylots</h1>
+                    <p>make sure weather is good for flying playne :)</p>
+                    <p>good pylots check weather :)))</p>
+                </div>
+                <div class="col-12 col-lg-6 mb-5">
+                    <div class="content_box">
+                        <h1>hi</h1>
+                    </div>
+                </div>
+            </div>
         </div>
-    <div class="col-12 col-lg-6 mb-5 content_box">
-      <h1>inspirational quote of the day for aspirational pylots</h1>
-      <p>make sure weather is good for flying playne :)</p>
-      <p>good pylots check weather :)))</p>
-      <div id="second-api-data-content">Loading quote...</div>
-    </div>
-    <div class="col-12 col-lg-6 mb-5">
-      <div class="content_box">
-        <h1>hi</h1>
-        </div>
-    </div>
-  </div>
-</div>
     </div>
     <script src="bootstrap.bundle.min.js"></script>
     </div>
     <!--------------->
 
     <div id="footer">
-      <p>Contact</p>
-      <p>Phone: (917) 966-0779</p>
-      <p>Email: wus15@rpi.edu</p>
+        <p>Contact</p>
+        <p>Phone: (917) 966-0779</p>
+        <p>Email: wus15@rpi.edu</p>
     </div>
 </body>
+
 </html>

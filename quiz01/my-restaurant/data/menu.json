@@ -1,0 +1,39 @@
+{
+    "menu": [{
+            "name": "Ajimi Kuro Ramen",
+            "image": "ramen.jpeg",
+            "vegan": "No",
+            "cuisine": "Japanese",
+            "desc": "Ramen with Black Garlic Oil",
+            "ings": "idk lmao",
+            "price": "$15.50"
+        },
+        {
+            "name": "Hong Shao Niu Rou Mian",
+            "image": "hongshaoniuroumian.jpg",
+            "vegan": "No",
+            "cuisine": "Chinese",
+            "desc": "Spicy Beef Noodle Soup",
+            "ings": "idk lmao",
+            "price": "$15.50"
+        },
+        {
+            "name": "Blue Rare Steak",
+            "image": "steak.jpg",
+            "vegan": "No",
+            "cuisine": "American",
+            "desc": "Blue Rare Steak",
+            "ings": "idk lmao",
+            "price": "$15.50"
+        },
+        {
+            "name": "Seasoned Lamb Chops",
+            "image": "hongshaoniuroumian.jpg",
+            "vegan": "No",
+            "cuisine": "Greek",
+            "desc": "Seasoned Lamb Chops",
+            "ings": "idk lmao",
+            "price": "$15.50"
+        }
+    ]
+}
