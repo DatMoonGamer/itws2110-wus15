@@ -25,15 +25,21 @@ $(document).ready(function() {
         url: "data/menu.json",
         dataType: "json",
         success: function(responseData, status) {
-            var output = "<ul class='vert_menu'>";
+            var output = "<div>";
 
             $.each(responseData.menu, function(i, item) {
                 output += '<div class="row"><div class="col-12 col-lg-6 mb-5 mx-auto"><div class="content_box">';
                 output += '<h1>' + item.name + '</h1>';
+                output += '<img class="centered" src="resources/img/' + item.image + '"></img>';
+                output += '<h2>' + item.price + '</h2>';
+                output += '<p>Vegan? ' + item.vegan + '</p>';
+                output += '<p>Cuisine: ' + item.cuisine + '</p>';
+                output += '<p>Description: ' + item.desc + '</p>';
+                output += '<p>Ingredients: ' + item.ings + '</p>';
                 output += '</div></div></div>';
             });
 
-            output += "</ul>";
+            output += "</div>";
             $('#projectMenuOutput').html(output);
 
             // tooltip
