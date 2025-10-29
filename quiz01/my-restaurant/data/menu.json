@@ -5,7 +5,7 @@
             "vegan": "No",
             "cuisine": "Japanese",
             "desc": "Ramen with Black Garlic Oil",
-            "ings": "idk lmao",
+            "ings": "Ramen noodles, braised pork belly, egg, soup, black garlic oil, onion, scallion, bamboo shoots",
             "price": "$15.50"
         },
         {
@@ -14,26 +14,26 @@
             "vegan": "No",
             "cuisine": "Chinese",
             "desc": "Spicy Beef Noodle Soup",
-            "ings": "idk lmao",
-            "price": "$15.50"
+            "ings": "Noodles, beef brisket, spicy soup, ginger, scallion, bok choy",
+            "price": "$14.00"
         },
         {
             "name": "Blue Rare Steak",
             "image": "steak.jpg",
             "vegan": "No",
             "cuisine": "American",
-            "desc": "Blue Rare Steak",
-            "ings": "idk lmao",
-            "price": "$15.50"
+            "desc": "Blue Rare Steak: seared on the outside, bloody on the inside",
+            "ings": "Grilled Filet Mignon steak, truffle salt",
+            "price": "$32.00"
         },
         {
             "name": "Seasoned Lamb Chops",
             "image": "lambchops.jpg",
             "vegan": "No",
             "cuisine": "Greek",
-            "desc": "Seasoned Lamb Chops",
-            "ings": "idk lmao",
-            "price": "$15.50"
+            "desc": "Seasoned Lamb Chops with Herbs",
+            "ings": "Grilled lamb chops, olive oil, garlic, rosemary, lemon juice",
+            "price": "$26.00"
         }
     ]
 }

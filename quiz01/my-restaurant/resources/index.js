@@ -31,7 +31,7 @@ $(document).ready(function() {
                 output += '<div class="row"><div class="col-12 col-lg-6 mb-5 mx-auto"><div class="content_box">';
                 output += '<h1>' + item.name + '</h1>';
                 output += '<img class="centered" src="resources/img/' + item.image + '"></img>';
-                output += '<h2>' + item.price + '</h2>';
+                output += '<h2 class=price>' + item.price + '</h2>';
                 output += '<p>Vegan? ' + item.vegan + '</p>';
                 output += '<p>Cuisine: ' + item.cuisine + '</p>';
                 output += '<p>Description: ' + item.desc + '</p>';
