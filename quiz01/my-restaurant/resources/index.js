@@ -41,9 +41,6 @@ $(document).ready(function() {
 
             output += "</div>";
             $('#projectMenuOutput').html(output);
-
-            // tooltip
-            $('.vert_menu li').tooltip();
         },
         error: function(msg) {
             // there was a problem
