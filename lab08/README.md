@@ -1,7 +1,13 @@
 # Quiz 02
 
 # GitHub link
+https://github.com/DatMoonGamer/itws2110-wus15/tree/main/lab08
 
+# Thoughts
+I find that using a mix of phpmyadmin (for visualization) and the terminal (for executing specific commands) was the best way to approach this lab.
+
+# Structure/content of database and tables link
+https://github.com/DatMoonGamer/itws2110-wus15/blob/main/lab08/websyslab8.sql
 
 ## Part 01
 # Create a database named websyslab8.
